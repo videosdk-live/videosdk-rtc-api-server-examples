@@ -1,0 +1,17 @@
+[package]
+name = "rust"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "2.0.0"
+actix-rt = "1.0.0"
+serde = { version = "1.0.101", features = ["derive"] }
+serde_json = "1"
+
+jsonwebtoken = "=7.2"
+#for HTTP request
+reqwest = { version = "0.11", features = ["blocking", "json"] }
+tokio = { version = "1", features = ["full"] }
