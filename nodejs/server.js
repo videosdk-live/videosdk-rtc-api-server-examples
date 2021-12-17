@@ -37,13 +37,12 @@ app.get("/get-token", (req, res) => {
 
 //
 app.post("/create-meeting/", (req, res) => {
-  const token = req.body.token;
-
+  const { token, region } = req.body;
   const url = `${process.env.VIDEOSDK_API_ENDPOINT}/api/meetings`;
-
   const options = {
     method: "POST",
-    headers: { Authorization: token },
+    headers: { Authorization: token, "Content-Type": "application/json" },
+    body: JSON.stringify({ region }),
   };
 
   fetch(url, options)
