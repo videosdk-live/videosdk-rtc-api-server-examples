@@ -14,10 +14,13 @@ app = Flask(__name__)
 
 @app.route('/get-token')
 def generateToken():
+    expiration_in_seconds = 600
+    expiration = datetime.datetime.now() + datetime.timedelta(seconds=expiration_in_seconds)
     token = jwt.encode(payload={
+        'exp': expiration,
         'apikey': VIDEOSDK_API_KEY,
         'permissions': ["allow_join", "allow_mod"],
-    }, key=VIDEOSDK_SECRET_KEY)
+    }, key=VIDEOSDK_SECRET_KEY, algorithm: "HS256")
 
     return jsonify(token=token)
 
