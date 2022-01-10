@@ -20,7 +20,7 @@ def generateToken():
         'exp': expiration,
         'apikey': VIDEOSDK_API_KEY,
         'permissions': ["allow_join", "allow_mod"],
-    }, key=VIDEOSDK_SECRET_KEY, algorithm: "HS256")
+    }, key=VIDEOSDK_SECRET_KEY, algorithm= "HS256")
 
     return jsonify(token=token)
 
