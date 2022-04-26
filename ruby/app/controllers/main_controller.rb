@@ -17,8 +17,10 @@ class MainController < ApplicationController
 		now = Time.now
 		exp = now + 86400
 		payload = {
+			version: 2,
 			apikey: $VIDEOSDK_API_KEY,
 			permissions: ["allow_join", "allow_mod"],
+			roles: ["CRAWLER", "PUBLISHER"],
 			iat: now.to_i,
     			exp: exp.to_i
 		}

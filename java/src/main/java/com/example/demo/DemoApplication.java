@@ -57,9 +57,11 @@ public class DemoApplication {
     public JSONObject generatToken() {
 		Map<String, Object> payload = new HashMap<>();
     	
+		payload.put("version", 2);
 		payload.put("apikey", VIDEOSDK_API_KEY);
     	payload.put("permissions", new String[]{"allow_join", "allow_mod"});
-    	
+    	payload.put("roles", new String[]{"CRAWLER", "PUBLISHER"});
+
 		String token = Jwts.builder().setClaims(payload)
     		.setExpiration(new Date(System.currentTimeMillis() + 86400 * 1000))
     		.signWith(SignatureAlgorithm.HS256,VIDEOSDK_SECRET_KEY.getBytes()).compact();
