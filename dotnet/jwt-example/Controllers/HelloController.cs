@@ -31,8 +31,10 @@ namespace jwt_example.Controllers
                       .WithSecret(VIDEOSDK_SECRET_KEY)
                       .AddClaim("exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
                       .AddClaim("iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds())
+                      .AddClaim("version", 2)
                       .AddClaim("apikey", VIDEOSDK_API_KEY)
                       .AddClaim("permissions", new string[2] { "allow_join", "allow_mod" })
+                      .AddClaim("roles", new string[2] { "CRAWLER", "PUBLISHER" })
                       .Encode();
 
 

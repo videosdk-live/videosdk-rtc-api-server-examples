@@ -12,8 +12,10 @@ extern crate serde_json;
 // For JS-TOKEN
 #[derive(Debug, Serialize)]
 struct  Payload{
+	version: u32,
     apikey:String,
     permissions:[String;2],
+	roles: [String;2],
 }
 
 //Info Structure
@@ -70,8 +72,10 @@ pub async fn get_token() -> impl Responder {
 	let videosdk_secret_key=String::from("");
 
 	let payload = Payload {
+		version: 2,
 	    apikey : videosdk_api_key,
 	    permissions: [String::from("allow_join"),String::from("allow_mod")],
+		roles: [String::from("CRAWLER"),String::from("PUBLISHER")],
 	};
 
 	// let header = Header::new(Algorithm:: HS256);

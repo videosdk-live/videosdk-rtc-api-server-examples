@@ -31,9 +31,15 @@ func getToken(w http.ResponseWriter, r *http.Request) {
 	permissions[0] = "allow_join"
 	permissions[1] = "allow_mod"
 
+	var roles [2]string
+	roles[0] = "CRAWLER"
+	roles[1] = "PUBLISHER"
+
 	atClaims := jwt.MapClaims{}
+	atClaims["version"] = 2
 	atClaims["apikey"] = VIDEOSDK_API_KEY
 	atClaims["permissions"] = permissions
+	atClaims["roles"] = roles
 	atClaims["iat"] = time.Now().Unix()
 	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)

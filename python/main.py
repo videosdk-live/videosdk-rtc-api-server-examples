@@ -18,9 +18,11 @@ def generateToken():
     expiration = datetime.datetime.now() + datetime.timedelta(seconds=expiration_in_seconds)
     token = jwt.encode(payload={
         'exp': expiration,
+        'version': 2,
         'apikey': VIDEOSDK_API_KEY,
         'permissions': ["allow_join", "allow_mod"],
-    }, key=VIDEOSDK_SECRET_KEY, algorithm= "HS256")
+        'roles': ["CRAWLER", "PUBLISHER"],
+    }, key=VIDEOSDK_SECRET_KEY, algorithm="HS256")
 
     return jsonify(token=token)
 

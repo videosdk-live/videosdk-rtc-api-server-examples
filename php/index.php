@@ -21,10 +21,12 @@ $route->respond('GET', '/get-token', function () {
 
     $payload = (object)[];
 
+    $payload->version = 2; 
     $payload->apikey = $GLOBALS['VIDEOSDK_API_KEY'];
     $payload->permissions = array(
         "allow_join", "allow_mod"
     );
+    $payload->roles = array("CRAWLER", "PUBLISHER");
     $payload->iat = $issuedAt->getTimestamp();
     $payload->exp = $expire;
 

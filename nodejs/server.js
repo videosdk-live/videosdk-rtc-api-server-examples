@@ -27,8 +27,10 @@ app.get("/get-token", (req, res) => {
   const options = { expiresIn: "10m", algorithm: "HS256" };
 
   const payload = {
+    version: 2,
     apikey: API_KEY,
     permissions: ["allow_join", "allow_mod"], // also accepts "ask_join"
+    roles: ["CRAWLER", "PUBLISHER"],
   };
 
   const token = jwt.sign(payload, SECRET_KEY, options);
