@@ -12,7 +12,7 @@ extern crate serde_json;
 // For JS-TOKEN
 #[derive(Debug, Serialize)]
 struct  Payload{
-	version: u32,
+	version: u8,
     apikey:String,
     permissions:[String;2],
 	roles: [String;2],
