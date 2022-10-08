@@ -21,6 +21,7 @@ def generateToken():
         'apikey': VIDEOSDK_API_KEY,
         'permissions': ["allow_join", "allow_mod"],
     }, key=VIDEOSDK_SECRET_KEY, algorithm= "HS256")
+    token = token.decode('UTF-8')
 
     return jsonify(token=token)
 
