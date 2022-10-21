@@ -1,50 +1,54 @@
 <?php
-
 require __DIR__ . '/vendor/autoload.php';
 
 use Firebase\JWT\JWT;
 use Klein\Klein as Route;
 
 /** Your API key and secret */
-$VIDEOSDK_API_KEY = "";
-$VIDEOSDK_SECRET_KEY = "";
-$VIDEOSDK_API_ENDPOINT = "https://api.videosdk.live";
+$VIDEOSDK_API_KEY = "9f9c5188-2918-4cc7-b068-15b49ab51b2e";
+$VIDEOSDK_SECRET_KEY = "e74154c662831b1cde7d02fcd1738a16b9beb11c2f6f3120e13e4d24e3f2760d";
+$VIDEOSDK_API_ENDPOINT = "https://api.videosdk.live/v2";
 
 $route = new Route();
 
-$route->respond('GET', '/get-token', function () {
+$route->respond('GET', '/get-token', function ()
+{
 
     header("Content-type: application/json; charset=utf-8");
 
-    $issuedAt   = new DateTimeImmutable();
-    $expire     = $issuedAt->modify('+24 hours')->getTimestamp();
+    $issuedAt = new DateTimeImmutable();
+    $expire = $issuedAt->modify('+24 hours')->getTimestamp();
 
     $payload = (object)[];
 
     $payload->apikey = $GLOBALS['VIDEOSDK_API_KEY'];
     $payload->permissions = array(
-        "allow_join", "allow_mod"
+        "allow_join",
+        "allow_mod"
     );
     $payload->iat = $issuedAt->getTimestamp();
     $payload->exp = $expire;
 
     $jwt = JWT::encode($payload, $GLOBALS['VIDEOSDK_SECRET_KEY']);
 
-    return json_encode(array("token" => $jwt));
+    return json_encode(array(
+        "token" => $jwt
+    ));
 });
 
-$route->respond('POST', '/create-meeting', function () {
+$route->respond('POST', '/create-meeting', function ()
+{
 
     header("Content-type: application/json; charset=utf-8");
 
-    $data = json_decode(file_get_contents('php://input'), true);
-  
+    $data = json_decode(file_get_contents('php://input') , true);
+
     $token = $data["token"];
-    
+
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/api/meetings',
+        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/rooms',
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
@@ -54,30 +58,80 @@ $route->respond('POST', '/create-meeting', function () {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: ' . $token
-        ),
+            'Authorization: ' . $token,
+            'Content-Type: application/json'
+        ) ,
     ));
 
     $response = curl_exec($curl);
-    
+
     curl_close($curl);
     return $response;
 });
 
-$route->respond('POST', '/validate-meeting/[:meetingId]', function ($request) {
+$route->respond('GET', '/validate-meeting/[:meetingId]', function ($request)
+{
 
     header("Content-type: application/json; charset=utf-8");
 
     $meetingId = $request->meetingId;
 
-    $data = json_decode(file_get_contents('php://input'), true);
-  
+    $data = json_decode(file_get_contents('php://input') , true);
+
     $token = $data["token"];
 
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/api/meetings/' . $meetingId,
+        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/rooms/validate/' . $meetingId,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: ' . $token,
+            'Content-Type: application/json'
+        ) ,
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return $response;
+});
+
+$route->respond('POST', '/start-recording', function ()
+{
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $data = json_decode(file_get_contents('php://input') , true);
+
+    $token = $data["token"];
+    $roomId = $data["roomId"];
+
+    $curl = curl_init();
+
+    $body = array(
+        "roomId" => $roomId,
+        "config" => array(
+            "layout" => array(
+                "type" => "GRID",
+                "priority" => "SPEAKER",
+                "gridSize" => 1
+            ) ,
+            "theme" => "DARK",
+            "mode" => "video-and-audio",
+            "quality" => "low"
+        ) ,
+    );
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/recordings/start',
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -86,8 +140,49 @@ $route->respond('POST', '/validate-meeting/[:meetingId]', function ($request) {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_HTTPHEADER => array(
-            'Authorization: ' . $token
-        ),
+            'Authorization: ' . $token,
+            'Content-Type: application/json'
+        ) ,
+        CURLOPT_POSTFIELDS => json_encode($body) ,
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    return $response;
+});
+
+$route->respond('POST', '/stop-recording', function ()
+{
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $data = json_decode(file_get_contents('php://input') , true);
+
+    $token = $data["token"];
+    $roomId = $data["roomId"];
+
+    $curl = curl_init();
+
+    $body = array(
+        "roomId" => $roomId,
+    );
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $GLOBALS['VIDEOSDK_API_ENDPOINT'] . '/recordings/end',
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: ' . $token,
+            'Content-Type: application/json'
+        ) ,
+        CURLOPT_POSTFIELDS => json_encode($body) ,
     ));
 
     $response = curl_exec($curl);
@@ -97,3 +192,4 @@ $route->respond('POST', '/validate-meeting/[:meetingId]', function ($request) {
 });
 
 $route->dispatch();
+
