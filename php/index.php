@@ -5,8 +5,8 @@ use Firebase\JWT\JWT;
 use Klein\Klein as Route;
 
 /** Your API key and secret */
-$VIDEOSDK_API_KEY = "9f9c5188-2918-4cc7-b068-15b49ab51b2e";
-$VIDEOSDK_SECRET_KEY = "e74154c662831b1cde7d02fcd1738a16b9beb11c2f6f3120e13e4d24e3f2760d";
+$VIDEOSDK_API_KEY = "YOUR_API_KEY";
+$VIDEOSDK_SECRET_KEY = "YOUR_SECRET_KEY";
 $VIDEOSDK_API_ENDPOINT = "https://api.videosdk.live/v2";
 
 $route = new Route();
