@@ -81,14 +81,14 @@ namespace jwt_example.Controllers
             return Json(response);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("validate-meeting/{meetingId}")]
-        public async Task<JsonResult> ValidateMeetingAsync([FromQuery] string token, string meetingId)
+        public async Task<JsonResult> ValidateMeetingAsync([FromBody] GetBody getBody, string meetingId)
         {
             string uri = VIDEOSDK_API_ENDPOINT + "/rooms/validate/" + meetingId;
 
             var response = await uri
-               .WithHeader("Authorization", token)
+               .WithHeader("Authorization", getBody.token)
                .GetAsync()
                .ReceiveJson();
 

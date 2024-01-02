@@ -55,7 +55,7 @@ pub async fn validate_meeting_request(token: &String,meeting_id:&String)-> Resul
 	let mut uri=String::from("https://api.videosdk.live/v2/rooms/validate/");
 	uri.push_str(meeting_id);
 	let res = client
-	    .post(uri)
+	    .get(uri)
 	    .header("Authorization", jwt_token)
 	    .send()
 	    .await?;
@@ -117,8 +117,8 @@ pub async fn create_meeting(body: web::Json<PostBody>) -> impl Responder {
 }
 
 //ROUTE::/validate-meeting
-//METHOD::GET
-pub async fn validate_meeting(meeting_id: web::Path<String>,body: web::Json<GetBody>) -> impl Responder {
+//METHOD::POST
+pub async fn validate_meeting(meeting_id: web::Path<String>,body: web::Json<PostBody>) -> impl Responder {
 	let res=validate_meeting_request(&body.token,&meeting_id).ok();//return response()
 	let res_string:String=res.unwrap();
 	let meeting_response:MeetingResponse=serde_json::from_str(&res_string).unwrap();

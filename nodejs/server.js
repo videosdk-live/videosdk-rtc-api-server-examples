@@ -71,7 +71,7 @@ app.post("/create-meeting/", (req, res) => {
 });
 
 //
-app.get("/validate-meeting/:meetingId", (req, res) => {
+app.post("/validate-meeting/:meetingId", (req, res) => {
   const token = req.body.token;
   const meetingId = req.params.meetingId;
 

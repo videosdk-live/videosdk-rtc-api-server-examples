@@ -58,7 +58,7 @@ def createMeeting():
     return res.json()
 
 
-@app.route('/validate-meeting/<string:meetingId>', methods=['GET'])
+@app.route('/validate-meeting/<string:meetingId>', methods=['POST'])
 def validateMeeting(meetingId):
     print(meetingId)
     obj = request.get_json()
