@@ -28,6 +28,31 @@ $route->respond('GET', '/get-token', function ()
     );
     $payload->iat = $issuedAt->getTimestamp();
     $payload->exp = $expire;
+    // $payload->version = 2; //OPTIONAL  // For accessing the v2 API, For passing roomId, participantId or roles parameters in payload it is required to pass.
+    // $payload->roomId = `2kyv-gzay-64pg`; //OPTIONAL // To provide customised access control, you can make the token applicable to a particular room by including the roomId in the payload.
+    // $payload->participantId = `lxvdplwt`; //OPTIONAL  // You can include the participantId in the payload to limit the token's access to a particular participant.
+    // $payload->roles =  array(
+    //    "crawler",
+    //    "rtc"
+    // ); //OPTIONAL // crawler role is only for accessing v2 API, you can not use this token for running the Meeting/Room. rtc is only allow for running the Meeting / Room, you can not use server-side APIs.
+
+    //OPTIONALLY add the version, roles, roomId, and peerId if you wish to use this token for joining the meeeting
+    //with a particular roomId or participantId
+    $roomId = $_GET['roomId'] ?? null;
+    $peerId = $_GET['peerId'] ?? null;
+
+    if ($roomId || $peerId) {
+        $payload->version = 2;
+        $payload->roles = ["rtc"];
+    }
+
+    if ($roomId) {
+        $payload->roomId = $roomId;
+    }
+
+    if ($peerId) {
+        $payload->participantId = $peerId;
+    }
 
     $jwt = JWT::encode($payload, $GLOBALS['VIDEOSDK_SECRET_KEY']);
 
