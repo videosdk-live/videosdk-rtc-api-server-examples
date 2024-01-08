@@ -20,7 +20,7 @@
    ```
    videosdk_api_key=''
    videosdk_secret_key=''
-   VIDEOSDK_API_ENDPOINT=https://api.videosdk.live
+   VIDEOSDK_API_ENDPOINT=https://api.videosdk.live/v2
    ```
 
 3. Run the server

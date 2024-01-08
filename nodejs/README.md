@@ -25,7 +25,7 @@
    ```
    VIDEOSDK_API_KEY=''
    VIDEOSDK_SECRET_KEY=''
-   VIDEOSDK_API_ENDPOINT=https://api.videosdk.live
+   VIDEOSDK_API_ENDPOINT=https://api.videosdk.live/v2
    ```
 
 4. Install NPM packages
